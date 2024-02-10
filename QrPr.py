@@ -1,18 +1,18 @@
-import cv2
 from pyzbar import pyzbar
-path = "testqr.jpeg"
-img = cv2.imread(path)
+import cv2
 
-cv2.imshow("img",img)
+image = cv2.imread('testqr.jpeg')
+barcodes = pyzbar.decode(image)
+for barcode in barcodes:
+    (x, y, w, h) = barcode.rect
+    cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+    barcodeData = barcode.data.decode('utf-8')
+    barcodeType = barcode.type
+    text = "{} ( {} )".format(barcodeData, barcodeType)
+    cv2.putText(image, text, (x, y - 10), cv2.FONT_HERSHEY_COMPLEX, 0.5, (255, 0, 0), 2)
+
+    print("Information : \n Found Type : {} Barcode : {}".format(barcodeType, barcodeData))
+
+cv2.imshow("Image", image)
 cv2.waitKey(0)
-cv2.destroyAllWindows()
-
-qrcode = pyzbar.decode(img)
-
-#x,y = qrcode.rect
-#cv2.rectangle(img,(x,y),0,0)
-#bdata = qrcode.data.decode("utf-8")
-#btype = qrcode.type
-#text = f"{bdata},{btype}"
-#cv2.putText(img,text(x,y-10))
-print (qrcode)
